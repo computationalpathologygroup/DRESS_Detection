@@ -1,0 +1,263 @@
+[33mcommit 4603296cd088cd608d5fb4fa52f013c49236341a[m[33m ([m[1;36mHEAD -> [m[1;32mdev[m[33m)[m
+Author: 99ffx <sirada.2635@gmail.com>
+Date:   Mon Apr 28 16:02:54 2025 +0200
+
+    add heatmap csv
+
+[33mcommit 29b6cd99122feffa2d7b109c75284d59add8da82[m
+Author: 99ffx <sirada.2635@gmail.com>
+Date:   Mon Apr 28 15:59:45 2025 +0200
+
+    add heatmap data
+
+[33mcommit ff9c31352e451bc3496749fde88fb7c22d72c115[m
+Author: 99ffx <sirada.2635@gmail.com>
+Date:   Mon Apr 28 10:43:57 2025 +0200
+
+    encoder probelm + heatmap error
+
+[33mcommit a2c75f192fac8d18eb00683cf01954bd1323ae9e[m[33m ([m[1;31morigin/dev[m[33m)[m
+Author: 99ffx <sirada.2635@gmail.com>
+Date:   Mon Apr 28 09:59:06 2025 +0200
+
+    univ2 heatmap
+
+[33mcommit 53e2409d4a8189c682c173382964a85f114f923c[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Guillaume Jaume <gjaume@bwh.harvard.edu>
+Date:   Mon Apr 14 15:42:00 2025 -0400
+
+    Update README.md
+
+[33mcommit f1e93945d5f5ac6ed077cb020ed01cf984780a77[m
+Author: HHenryD <17082217d@connect.polyu.hk>
+Date:   Thu Dec 5 21:07:55 2024 -0500
+
+    add support for CONCH v1.5
+
+[33mcommit 24ddf793540c68963cb4810ddce9404440585fda[m
+Author: HHenryD <17082217d@connect.polyu.hk>
+Date:   Thu Dec 5 20:15:39 2024 -0500
+
+    add support for CONCH v1.5
+
+[33mcommit 8455dc8c4623f8881281c65a3725bbdad99fb59e[m
+Merge: 206bf2d bf70591
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Mon Apr 29 13:35:03 2024 -0700
+
+    Merge pull request #244 from shubhaminnani/shubhaminnani-eval-fix
+    
+    added missing args & correct import of eval_transforms
+
+[33mcommit bf7059100a1b5af43e11176abad3d0ad66493b44[m
+Author: Shubham Innani <sinnani@iu.edu>
+Date:   Mon Apr 29 10:19:40 2024 -0400
+
+    correct import for get_eval_transforms
+
+[33mcommit 3bf2a7b28b6053b1c038d799afafd8fc32bf3f80[m
+Author: Shubham Innani <sinnani@iu.edu>
+Date:   Mon Apr 29 09:58:44 2024 -0400
+
+    added missing args
+
+[33mcommit 206bf2dfddd5a297513087358302c8d9b2233192[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Fri Apr 12 08:55:45 2024 -0700
+
+    Update README.md
+
+[33mcommit fc26d3ee6d5d3275f157b6ddd1189ddb833b2b8e[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Fri Apr 12 08:54:41 2024 -0700
+
+    Update README.md
+
+[33mcommit 08bc92977e7aefcae169854e0f46aeac2b81ce53[m
+Author: fedshyvana <mingyanglu1997@Gmail.com>
+Date:   Thu Apr 11 17:13:56 2024 -0400
+
+    bug fix: CLAM_MB
+
+[33mcommit de133cac124c4ae26aeb2736b3000c30824a4b97[m
+Merge: ead5d8f 610f498
+Author: fedshyvana <mingyanglu1997@Gmail.com>
+Date:   Thu Apr 11 09:07:12 2024 -0400
+
+    Merge branch 'master' of https://github.com/mahmoodlab/CLAM
+
+[33mcommit ead5d8f2bd66d2f0d73142e540253c12a2bde09e[m
+Author: fedshyvana <mingyanglu1997@Gmail.com>
+Date:   Thu Apr 11 09:07:06 2024 -0400
+
+    fix invalid import
+
+[33mcommit 610f49867cc06ad368ad2db9f1512d3e3039a608[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Apr 6 20:47:55 2024 -0700
+
+    Update README.md
+
+[33mcommit abab5996e5fdbeffaff85747d03c826f7824ec76[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Apr 6 17:09:13 2024 -0700
+
+    Update README.md
+
+[33mcommit 14fbcc4b21475c543f468873e383384b04f55f98[m
+Author: fedshyvana <mingyanglu1997@Gmail.com>
+Date:   Sat Apr 6 18:54:45 2024 -0400
+
+    fix: feature extraction refactor
+
+[33mcommit 6873ed520f07d8d95d6371c31a491faeac0a4ef4[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Apr 6 15:50:18 2024 -0700
+
+    Update env.yml
+
+[33mcommit 27d4d48ed4ee26ff21c9eb4f096838174a8a2dea[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Apr 6 15:44:49 2024 -0700
+
+    Update README.md
+
+[33mcommit ee3764a402c016127eb3b306ead286c42cd2d2f5[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Apr 6 15:43:08 2024 -0700
+
+    Update README.md
+
+[33mcommit 899ab1f9ca7b08f573d03e07d54797a4bef6c102[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Apr 6 15:42:30 2024 -0700
+
+    Update README.md
+
+[33mcommit 8a4114233f2551a04ca357a247e1ecc8fd4da033[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Apr 6 15:41:43 2024 -0700
+
+    Update README.md
+
+[33mcommit 34611cb2431a1b411f5c8e4eaa03f54fe0b4df3c[m
+Author: fedshyvana <mingyanglu1997@Gmail.com>
+Date:   Sat Apr 6 18:40:02 2024 -0400
+
+    update readme
+
+[33mcommit 77d05ff44d5288f1f37c87e7b7063abba1ebcb22[m
+Merge: 2e5bb7d d613a3d
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Apr 6 15:35:35 2024 -0700
+
+    Merge pull request #235 from mahmoodlab/latest
+    
+    add support for UNI/CONCH
+
+[33mcommit d613a3d3ff9a1fd8d5fd91fbcf7220fe8d012bb0[m
+Author: fedshyvana <mingyanglu1997@Gmail.com>
+Date:   Sat Apr 6 18:33:14 2024 -0400
+
+    add support for UNI/CONCH
+
+[33mcommit 2e5bb7db6beefe2404ad311197aa94ba2211d338[m
+Author: fedshyvana <mingyanglu1997@Gmail.com>
+Date:   Tue Mar 19 12:13:26 2024 -0400
+
+    update README: uni and conch
+
+[33mcommit 38449aeb25a56486cbbb49d2fbf7cf819ab621e2[m
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Mar 16 22:40:24 2024 -0700
+
+    Update README.md
+
+[33mcommit 3f875f77465b410d260f2afcfaea608a9d6ddbca[m
+Author: Faisal Mahmood <39421376+faisalml@users.noreply.github.com>
+Date:   Mon Feb 5 20:31:14 2024 -0500
+
+    Update README.md
+
+[33mcommit e02d26b19b643428ad6eb32f7cfaa680577efdd0[m
+Author: Faisal Mahmood <39421376+faisalml@users.noreply.github.com>
+Date:   Mon Feb 5 20:30:12 2024 -0500
+
+    Update README.md
+
+[33mcommit 26e0b6c4873e112f1ccd74cd834894c4ab7a2934[m
+Merge: 9482cbc 1425417
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Sat Sep 30 18:59:22 2023 -0400
+
+    Merge pull request #199 from scjjb/patch-4
+    
+    Update WholeSlideImage.py - fix bug where minimum number of patches is 2 instead of 1.
+
+[33mcommit 1425417de7451fecfd378349d499753b15ae3ed0[m
+Author: Jack Breen <77981425+scjjb@users.noreply.github.com>
+Date:   Tue Aug 1 16:57:54 2023 +0100
+
+    Update WholeSlideImage.py
+    
+    Reduce minimum number of patches per slide from 2 to 1. This is particularly useful when using large patches, such as the 4096x4096 patches of HIPT_4K.
+
+[33mcommit 9482cbc72df522087cfbaa3e6b52da5207a7980a[m
+Merge: c4d24de cc10f76
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Thu Feb 2 17:57:25 2023 -0500
+
+    Merge pull request #158 from scjjb/patch-4
+    
+    Typo fix in parser help
+
+[33mcommit c4d24de06c3badd23bdb83acfe89f188f294f4d8[m
+Merge: 6fbcaa3 8d2df53
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Thu Feb 2 17:57:01 2023 -0500
+
+    Merge pull request #156 from scjjb/patch-3
+    
+    Fix minor typo in printout
+
+[33mcommit cc10f76ad4dba0c0c2eca090df0deb164ca367cd[m
+Author: Jack Breen <77981425+scjjb@users.noreply.github.com>
+Date:   Wed Oct 26 12:01:10 2022 +0100
+
+    Typo fix in parser help
+
+[33mcommit 8d2df53b74cd0ec9d191ea25d54aa1709590e9e2[m
+Author: Jack Breen <77981425+scjjb@users.noreply.github.com>
+Date:   Wed Oct 12 16:09:49 2022 +0100
+
+    Fix minor typo in printout
+
+[33mcommit 6fbcaa38d79e69f83dd463527093848fa4aa5091[m
+Merge: 5c17108 1a92ef2
+Author: fedshyvana <mingyanglu1997@Gmail.com>
+Date:   Mon Aug 15 16:21:33 2022 -0400
+
+    Merge branch 'master' of https://github.com/mahmoodlab/CLAM
+
+[33mcommit 5c17108ed35f570cdff4ca6c9904f1f058e1e2ee[m
+Author: fedshyvana <mingyanglu1997@Gmail.com>
+Date:   Mon Aug 15 16:20:26 2022 -0400
+
+    non-event
+
+[33mcommit 1a92ef234411b44ec9ba27551307aea1143b5b4e[m
+Merge: bdd460b 82a8a13
+Author: Max Lu <39780468+fedshyvana@users.noreply.github.com>
+Date:   Fri May 20 14:05:06 2022 -0400
+
+    Merge pull request #124 from scjjb/patch-1
+    
+    Remove outdated code
+
+[33mcommit 82a8a13ddda67712aaee35bf320aaf525a6e1021[m
+Author: Jack Breen <77981425+scjjb@users.noreply.github.com>
+Date:   Thu May 19 19:08:28 2022 +0100
+
+    Remove outdated code
+    
+    Remove reference to model_type 'clam', which is no longer functional, as explained in https://github.com/mahmoodlab/C

@@ -1,0 +1,7 @@
+**/.DS_Store
+__pycache__/
+notebooks
+# heatmaps/demo/slides
+# heatmaps/heatmap_raw_results/
+heatmaps/
+splits/
