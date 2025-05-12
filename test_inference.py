@@ -1,3 +1,4 @@
+import argparse
 import os
 import h5py
 import torch
@@ -19,7 +20,7 @@ def load_model(checkpoint_path, device):
         gate=True,
         size_arg="small",
         dropout=0.25,
-        k_sample=15,
+        k_sample=500,
         n_classes=2,
         subtyping=False,
         embed_dim=1536
@@ -76,16 +77,33 @@ def set_seed(seed=42):
 
 
 def main():
-    set_seed(42)
+    parser = argparse.ArgumentParser(description="Run Zoom Fusion Inference")
+    parser.add_argument("--seed", type=int, default=42,
+                        help="Random seed for reproducibility")
+    parser.add_argument("--checkpoint_path", type=str,
+                        required=True, help="Path to the model checkpoint")
+    parser.add_argument("--csv_path", type=str, required=True,
+                        help="Path to the dataset CSV")
+    parser.add_argument("--features_dir_10x", type=str,
+                        required=True, help="Path to 10x feature directory")
+    parser.add_argument("--features_dir_20x", type=str,
+                        required=True, help="Path to 20x feature directory")
+    parser.add_argument("--output_csv", type=str,
+                        required=True, help="Path to output CSV file")
+    parser.add_argument("--fusion", type=str, default="abg",
+                        choices=['avg', 'sum'], help='Fusion method')
+    args = parser.parse_args()
+
+    set_seed(args.seed)
     all_true = []
     all_pred = []
     all_probs = []
-    checkpoint_path = "results/s_2_checkpoint.pt"
-    model = load_model(checkpoint_path, device)
+
+    model = load_model(args.checkpoint_path, device)
 
     dataset = Generic_MIL_Dataset(
-        csv_path='dataset_csv/dataset_split.csv',
-        data_dir='../RESULTS_DIRECTORY/features_UNIv2_10x',
+        csv_path=args.csv_path,
+        data_dir=args.features_dir_10x,
         shuffle=False,
         seed=24,
         print_info=True,
@@ -95,14 +113,16 @@ def main():
     )
 
     for sample_idx in range(len(dataset)):
-        slide_path = dataset.slide_data.loc[sample_idx, 'path']
 
+        slide_path = dataset.slide_data.loc[sample_idx, 'path']
         topk_coords_10x, topk_features_10x, true_label = extract_topk_features_lowmag(
             model, dataset, sample_idx)
+        print(
+            f"[Sample {sample_idx}] Number of Top-K 10x coords: {len(topk_coords_10x)}")
 
         feature_20x_path = os.path.join(
-            "../RESULTS_DIRECTORY/features_UNIv2_20x/h5_files",
-            os.path.splitext(os.path.basename(slide_path))[0] + ".h5"
+            args.features_dir_20x, 'h5_files',
+            os.path.basename(slide_path) + ".h5"
         )
 
         features_highmag_topk = map_topk_to_highmag(
@@ -116,7 +136,7 @@ def main():
             topk_features_20x = features_highmag_topk
 
         fusion_model = ZoomFusionClassifier(
-            feature_dim=1536, n_classes=2, fusion='sum').to(device)
+            feature_dim=1536, n_classes=2, fusion=args.fusion).to(device)
         prob_fused, logits_fused = fusion_model(
             topk_features_10x, topk_features_20x)
         pred_fused = torch.softmax(prob_fused, dim=1)
@@ -135,10 +155,10 @@ def main():
         # write to CSV (keep this as-is)
         df = pd.DataFrame([row])
         output_csv = "dataset_csv/zoom_fusion_results_sum_seed2.csv"
-        if not os.path.exists(output_csv) and sample_idx == 0:
-            df.to_csv(output_csv, index=False)
+        if not os.path.exists(args.output_csv) and sample_idx == 0:
+            df.to_csv(args.output_csv, index=False)
         else:
-            df.to_csv(output_csv, mode='a', header=False, index=False)
+            df.to_csv(args.output_csv, mode='a', header=False, index=False)
     precision = precision_score(all_true, all_pred)
     recall = recall_score(all_true, all_pred)
     f1 = f1_score(all_true, all_pred)
