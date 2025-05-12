@@ -11,8 +11,13 @@ from dataset_modules.dataset_generic import Generic_MIL_Dataset
 from visualization import zoom_coords
 from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score, accuracy_score
 
+<<<<<<< HEAD
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+=======
+from models.model_clam import CLAM_SB
+
+>>>>>>> 424360c3bb03c1a0ba1f13d1b02f6bacc0fc27d9
 
 class ZoomFusionClassifier(nn.Module):
     def __init__(self, feature_dim=1536, n_classes=2, fusion='avg'):
