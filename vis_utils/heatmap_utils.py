@@ -23,9 +23,9 @@ from tqdm import tqdm
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-def score2percentile(score, ref):
+def score2percentile(score, ref):   #expect single scalar value
     percentile = percentileofscore(ref, score)
-    return percentile
+    return percentile   
 
 
 def drawHeatmap(scores, coords, slide_path=None, wsi_object=None, vis_level=-1, **kwargs):
@@ -85,10 +85,39 @@ def compute_from_patches(wsi_object, img_transforms, feature_extractor=None, cla
 
                 A = A.view(-1, 1).cpu().numpy()
 
+                # if ref_scores is not None:
+                #     ref_scores = np.array(ref_scores).flatten()
+                #     percentiles = np.array([score2percentile(score, ref_scores) for score in A.flatten()])
+                #     for score_idx in range(len(A)):
+                #         print("A shape:", A.shape)    # [N_patches,1]  each patches attention score
+                #         print("A[score_idx,0]shape:", A[score_idx,0].shape)
+                #         # A[score_idx] = score2percentile(A[score_idx], ref_scores)
+                #         A[score_idx] = score2percentile(A[score_idx].item(), ref_scores)   #Access the scalar value at [score_idx,0]
+                # asset_dict = {'attention_scores': A, 'coords': coords}
+                # save_path = save_hdf5(attn_save_path, asset_dict, mode=mode)
+
                 if ref_scores is not None:
-                    for score_idx in range(len(A)):
-                        A[score_idx] = score2percentile(
-                            A[score_idx], ref_scores)
+                    # Convert ref_scores to numpy array if it isn't already
+                    ref_scores = np.array(ref_scores).flatten()
+                    
+                    # Initialize array for percentiles
+                    percentiles = np.zeros_like(A)
+                    
+                    # Iterate through each attention score
+                    for i in range(A.shape[0]):
+                        print(f"Type of A: {type(A)}")
+                        print(f"Shape of A: {A.shape}")
+                        print(f"Type of A[i,0]: {type(A[i,0])}")
+                        print(f"Type of ref_scores: {type(ref_scores)}")
+                        print(f"Shape of ref_scores: {ref_scores.shape}")
+                                                
+
+                        # Get scalar value from array
+                        score = float(A[i, 0])
+                        # Calculate percentile
+                        percentiles[i, 0] = score2percentile(score, ref_scores)
+                    
+                    A = percentiles
 
                 asset_dict = {'attention_scores': A, 'coords': coords}
                 save_path = save_hdf5(attn_save_path, asset_dict, mode=mode)
