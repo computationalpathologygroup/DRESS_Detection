@@ -6,3 +6,5 @@ notebooks
 heatmaps/
 splits/
 Data/
+data_heatmaps_backup/
+checkpoints/
