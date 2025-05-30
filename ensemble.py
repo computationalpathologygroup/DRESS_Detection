@@ -31,6 +31,8 @@ def parse_args():
                         default=0.25, help='Dropout used in model')
     parser.add_argument('--k_sample', type=int, default=15,
                         help='Number of patches sampled for instance-level training')
+    parser.add_argument('--random_topk', action='store_true', help='Use random Top-K patch selection instead of attention-based')
+
     return parser.parse_args()
 
 
@@ -56,10 +58,10 @@ def load_clam_model(checkpoint_path, args, device):
     return model
 
 
-def get_model_probs(model, features, device):
+def get_model_probs(model, features, device, use_random_topk=True):
     with torch.no_grad():
         features = features.to(device)
-        _, probs, _, _, _ = model(features)
+        _, probs, _, _, _ = model(features, return_topk_features=True, use_random_topk=use_random_topk)
         return probs.cpu().numpy()  # shape: [1, num_classes]
 
 
@@ -108,7 +110,7 @@ def main():
         for model, dataset in zip(models, datasets):
             features, label, _ = dataset[i]
             features = features.to(device)
-            probs = get_model_probs(model, features, device)  # shape: [1, C]
+            probs = get_model_probs(model, features, device, use_random_topk=args.random_topk)  # shape: [1, C]
             probs_list.append(probs)
 
         #--------Mean fusion--------

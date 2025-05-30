@@ -147,7 +147,7 @@ class CLAM_SB(nn.Module):
         instance_loss = self.instance_loss_fn(logits, p_targets)
         return instance_loss, p_preds, p_targets
 
-    def forward(self, h, label=None, instance_eval=False, return_features=False, attention_only=False, return_topk_features=False):
+    def forward(self, h, label=None, instance_eval=False, return_features=False, attention_only=False, return_topk_features=False, use_random_topk=False):
 
         A, h = self.attention_net(h)  # NxK
         A = torch.transpose(A, 1, 0)  # KxN
@@ -201,7 +201,13 @@ class CLAM_SB(nn.Module):
         if return_topk_features:
             A = A.squeeze(0)  # [1028]
             topk = min(self.k_sample, A.shape[0])
-            topk_ids = torch.topk(A, topk, dim=0)[1]  # Top-k indices
+            #Use random topk if specified
+            if use_random_topk:
+                topk_ids = torch.randperm(A.shape[0])[:topk]  # Randomly permute the topk indices
+            else:
+                #Use the topk indices based on attention scores
+                topk_ids = torch.topk(A, topk, dim=0)[1]
+            
             topk_feats = h[topk_ids]
             topk_attn = A[topk_ids]
             results_dict.update(

@@ -72,7 +72,7 @@ def get_encoder(model_name, target_img_size=224):
         }
         model = timm.create_model(pretrained=False, **timm_kwargs)
         model.load_state_dict(torch.load(
-            UNI_CKPT_PATH, map_location="cpu", weights_only=True), strict=False)
+            UNI_CKPT_PATH, map_location="cpu"), strict=False)
     elif model_name == 'conch_v1':
         HAS_CONCH, CONCH_CKPT_PATH = has_CONCH()
         assert HAS_CONCH, 'CONCH is not available'
