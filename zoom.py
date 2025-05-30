@@ -11,13 +11,8 @@ from dataset_modules.dataset_generic import Generic_MIL_Dataset
 from visualization import zoom_coords
 from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score, accuracy_score
 
-<<<<<<< HEAD
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-=======
-from models.model_clam import CLAM_SB
-
->>>>>>> 424360c3bb03c1a0ba1f13d1b02f6bacc0fc27d9
 
 class ZoomFusionClassifier(nn.Module):
     def __init__(self, feature_dim=1536, n_classes=2, fusion='avg'):
@@ -45,12 +40,12 @@ def load_model(checkpoint_path, device):
         gate=True,
         size_arg="small",
         dropout=0.25,
-        k_sample=500,
+        k_sample=50,
         n_classes=2,
         subtyping=False,
         embed_dim=1536
     )
-    checkpoint = torch.load(checkpoint_path, weights_only=True)
+    checkpoint = torch.load(checkpoint_path)
     model.load_state_dict(checkpoint, strict=False)
     model.to(device)
     model.eval()
@@ -137,9 +132,15 @@ def main():
         ignore=[]
     )
 
+    dataset.slide_data = dataset.slide_data[dataset.slide_data['split'] == 'test'].reset_index(drop=True)
+
+
     for sample_idx in range(len(dataset)):
 
         slide_path = dataset.slide_data.loc[sample_idx, 'path']
+        slide_path = os.path.normpath(slide_path)
+        print(f"Processing slide: {slide_path}")
+        print(f"Basename: {os.path.basename(slide_path)}")
         topk_coords_10x, topk_features_10x, true_label = extract_topk_features_lowmag(
             model, dataset, sample_idx)
         print(

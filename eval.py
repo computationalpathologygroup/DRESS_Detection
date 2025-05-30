@@ -12,6 +12,7 @@ from utils.utils import *
 from math import floor
 import matplotlib.pyplot as plt
 from dataset_modules.dataset_generic import Generic_WSI_Classification_Dataset, Generic_MIL_Dataset, save_splits
+from sklearn.metrics import f1_score, precision_score, recall_score
 import h5py
 from utils.eval_utils import *
 
@@ -131,12 +132,29 @@ if __name__ == "__main__":
             datasets = dataset.return_splits(from_id=False, csv_path=csv_path)
             split_dataset = datasets[datasets_id[args.split]]
         model, patient_results, test_error, auc, df  = eval(split_dataset, args, ckpt_paths[ckpt_idx])
-        all_results.append(all_results)
+
+        y_true = df['label'].tolist()
+        y_pred = df['pred'].tolist()
+
+        f1 = f1_score(y_true, y_pred)
+        precision = precision_score(y_true, y_pred)
+        recall = recall_score(y_true, y_pred)
+
+        # all_results.append(all_results)
         all_auc.append(auc)
         all_acc.append(1-test_error)
+        all_results.append({
+        'fold': folds[ckpt_idx],
+        'auc': auc,
+        'acc': 1 - test_error,
+        'f1': f1,
+        'precision': precision,
+        'recall': recall
+    })
         df.to_csv(os.path.join(args.save_dir, 'fold_{}.csv'.format(folds[ckpt_idx])), index=False)
 
-    final_df = pd.DataFrame({'folds': folds, 'test_auc': all_auc, 'test_acc': all_acc})
+    # final_df = pd.DataFrame({'folds': folds, 'test_auc': all_auc, 'test_acc': all_acc})
+    final_df = pd.DataFrame(all_results)
     if len(folds) != args.k:
         save_name = 'summary_partial_{}_{}.csv'.format(folds[0], folds[-1])
     else:

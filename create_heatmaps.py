@@ -33,8 +33,8 @@ parser.add_argument('--config_file', type=str,
 args = parser.parse_args()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-os.environ['UNI_CKPT_PATH_V2'] = 'heatmaps/demo/ckpts/s_2_checkpoint.pt'
-
+os.environ['UNI_CKPT_PATH_V2'] = 'checkpoints/ensemble_checkpoint.pt'
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:64'
 
 def infer_single_slide(model, features, label, reverse_label_dict, k=1):
     features = features.to(device)
