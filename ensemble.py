@@ -10,18 +10,28 @@ from dataset_modules.dataset_generic import Generic_MIL_Dataset
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Cross-validated ensemble inference using CLAM_SB.")
-    parser.add_argument('--model_paths', nargs='+', required=True, help='Paths to model checkpoint files')
-    parser.add_argument('--feature_dirs', nargs='+', required=True, help='Feature directories (one per model)')
-    parser.add_argument('--dataset_csv', type=str, required=True, help='CSV with full dataset (case_id, label, path, etc.)')
-    parser.add_argument('--cv_split_dir', type=str, required=True, help='Directory with splits_{fold}.csv')
-    parser.add_argument('--cv_folds', type=int, default=5, help='Number of CV folds')
-    parser.add_argument('--output_dir', type=str, default='cv_results', help='Directory to save per-fold results')
-    parser.add_argument('--embed_dim', type=int, default=1536)
-    parser.add_argument('--size_arg', type=str, choices=['small', 'big'], default='small')
-    parser.add_argument('--n_classes', type=int, default=2)
-    parser.add_argument('--dropout', type=float, default=0.25)
-    parser.add_argument('--k_sample', type=int, default=15)
+    parser = argparse.ArgumentParser(
+        description="Late fusion ensemble using Generic_MIL_Dataset.")
+    parser.add_argument('--model_paths', nargs='+', required=True,
+                        help='Paths to model checkpoint files (one per encoder)')
+    parser.add_argument('--feature_dirs', nargs='+', required=True,
+                        help='Directories containing .h5 files for each encoder (order must match models)')
+    parser.add_argument('--dataset_csv', type=str,
+                        required=True, help='Path to dataset_split.csv')
+    parser.add_argument('--output_csv', type=str, default='ensemble_results.csv',
+                        help='Path to save CSV with predictions')
+    parser.add_argument('--embed_dim', type=int, default=1536,
+                        help='Feature embedding dimension')
+    parser.add_argument('--size_arg', type=str,
+                        choices=['small', 'big'], default='small', help='Model size argument')
+    parser.add_argument('--n_classes', type=int, default=2,
+                        help='Number of output classes')
+    parser.add_argument('--dropout', type=float,
+                        default=0.25, help='Dropout used in model')
+    parser.add_argument('--k_sample', type=int, default=15,
+                        help='Number of patches sampled for instance-level training')
+    parser.add_argument('--random_topk', action='store_true', help='Use random Top-K patch selection instead of attention-based')
+
     return parser.parse_args()
 
 def load_clam_model(checkpoint_path, args, device):
@@ -41,10 +51,11 @@ def load_clam_model(checkpoint_path, args, device):
     model.eval()
     return model
 
-def get_model_probs(model, features, device):
+
+def get_model_probs(model, features, device, use_random_topk=True):
     with torch.no_grad():
         features = features.to(device)
-        _, probs, _, _, _ = model(features)
+        _, probs, _, _, _ = model(features, return_topk_features=True, use_random_topk=use_random_topk)
         return probs.cpu().numpy()  # shape: [1, num_classes]
 
 def main():
@@ -85,6 +96,11 @@ def main():
         num_samples = len(datasets[0])
 
         fold_preds, fold_probs, fold_labels, slide_ids = [], [], [], []
+        for model, dataset in zip(models, datasets):
+            features, label, _ = dataset[i]
+            features = features.to(device)
+            probs = get_model_probs(model, features, device, use_random_topk=args.random_topk)  # shape: [1, C]
+            probs_list.append(probs)
 
         for i in tqdm(range(num_samples)):
             slide_id = datasets[0].slide_data.loc[i, 'slide_id']

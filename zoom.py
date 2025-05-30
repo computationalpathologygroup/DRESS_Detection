@@ -2,7 +2,6 @@ import argparse
 import os
 import h5py
 import torch
-import torch.nn as nn
 import random
 import pandas as pd
 import numpy as np
@@ -10,42 +9,25 @@ from models.model_clam import CLAM_SB
 from dataset_modules.dataset_generic import Generic_MIL_Dataset
 from visualization import zoom_coords
 from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score, accuracy_score
+from zoom import ZoomFusionClassifier
 
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-class ZoomFusionClassifier(nn.Module):
-    def __init__(self, feature_dim=1536, n_classes=2, fusion='avg'):
-        super().__init__()
-        self.fusion = fusion
-        self.classifier = nn.Linear(feature_dim, n_classes)
-
-    def forward(self, feats_10x, feats_20x):
-        if self.fusion == 'avg':
-            fused = (feats_10x + feats_20x) / 2
-        elif self.fusion == 'sum':
-            fused = feats_10x + feats_20x
-        else:
-            raise ValueError(
-                "Invalid fusion method. Choose 'avg', 'sum'")
-
-        pooled = fused.mean(dim=0, keepdim=True)  # Global average pooling
-        logits = self.classifier(pooled)  # Shape [1, n_classes]
-        probs = torch.softmax(logits, dim=1)
-        return probs, logits
-
+os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def load_model(checkpoint_path, device):
     model = CLAM_SB(
         gate=True,
         size_arg="small",
         dropout=0.25,
-        k_sample=50,
+        k_sample=500,
         n_classes=2,
         subtyping=False,
         embed_dim=1536
     )
-    checkpoint = torch.load(checkpoint_path)
+    checkpoint = torch.load(checkpoint_path, weights_only=True)
     model.load_state_dict(checkpoint, strict=False)
     model.to(device)
     model.eval()
@@ -64,7 +46,7 @@ def extract_topk_features_lowmag(model, dataset, sample_idx):
 
     with torch.no_grad():
         logits, Y_prob, Y_hat, A_raw, result_dict = model(
-            features, label=torch.tensor(label), return_topk_features=True)
+            features, label=torch.tensor(label), return_topk_features=True, use_random_topk= True)
 
     topk_ids = result_dict['topk_ids']
     topk_features = features[topk_ids]
@@ -132,15 +114,9 @@ def main():
         ignore=[]
     )
 
-    dataset.slide_data = dataset.slide_data[dataset.slide_data['split'] == 'test'].reset_index(drop=True)
-
-
     for sample_idx in range(len(dataset)):
 
         slide_path = dataset.slide_data.loc[sample_idx, 'path']
-        slide_path = os.path.normpath(slide_path)
-        print(f"Processing slide: {slide_path}")
-        print(f"Basename: {os.path.basename(slide_path)}")
         topk_coords_10x, topk_features_10x, true_label = extract_topk_features_lowmag(
             model, dataset, sample_idx)
         print(
