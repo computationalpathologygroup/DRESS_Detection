@@ -132,15 +132,24 @@ if __name__ == "__main__":
             datasets = dataset.return_splits(from_id=False, csv_path=csv_path)
             split_dataset = datasets[datasets_id[args.split]]
         model, patient_results, test_error, auc, df  = eval(split_dataset, args, ckpt_paths[ckpt_idx])
+
+        df.rename(columns={
+            'slide_id': 'slide',
+            'Y': 'label',
+            'Y_hat': 'pred',
+            'p_0': 'prob_class0',
+            'p_1': 'prob_class1'
+        }, inplace=True)
+        
         print("📋 Columns in df:", df.columns.tolist())
         print(df.head())
-        # y_true = df['label'].tolist()
-        # y_pred = df['pred'].tolist()
 
-        label_col = 'label' if 'label' in df.columns else 'ground_truth'
-        pred_col = 'pred' if 'pred' in df.columns else 'prediction'
-        y_true = df[label_col].tolist()
-        y_pred = df[pred_col].tolist()
+        # possible_label_cols = ['label', 'Y', 'ground_truth']
+        # label_col = next((col for col in possible_label_cols if col in df.columns), None)
+        y_true = df['label'].tolist()
+        y_pred = df['pred'].tolist()
+
+
 
 
         f1 = f1_score(y_true, y_pred)
