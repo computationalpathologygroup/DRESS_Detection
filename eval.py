@@ -31,7 +31,7 @@ parser.add_argument('--splits_dir', type=str, default=None,
                     help='splits directory, if using custom splits other than what matches the task (default: None)')
 parser.add_argument('--model_size', type=str, choices=['small', 'big'], default='small', 
                     help='size of model (default: small)')
-parser.add_argument('--model_type', type=str, choices=['clam_sb', 'clam_mb', 'mil'], default='clam_sb', 
+parser.add_argument('--model_type', type=str, choices=['clam_sb', 'clam_mb', 'mil', 'abmil'], default='clam_sb', 
                     help='type of model (default: clam_sb)')
 parser.add_argument('--k', type=int, default=10, help='number of folds (default: 10)')
 parser.add_argument('--k_start', type=int, default=-1, help='start fold (default: -1, last fold)')
@@ -74,7 +74,7 @@ print(settings)
 if args.task == 'task_1_DRESS_vs_MDE':
     args.n_classes=2
     dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/dataset_split.csv',
-                            data_dir= '../features_UNIv2_20x',
+                            data_dir= os.path.join(args.data_root_dir),
                             shuffle = False, 
                             print_info = True,
                             label_dict = {'DRESS':0, 'MDE':1},
@@ -132,9 +132,16 @@ if __name__ == "__main__":
             datasets = dataset.return_splits(from_id=False, csv_path=csv_path)
             split_dataset = datasets[datasets_id[args.split]]
         model, patient_results, test_error, auc, df  = eval(split_dataset, args, ckpt_paths[ckpt_idx])
+        print("📋 Columns in df:", df.columns.tolist())
+        print(df.head())
+        # y_true = df['label'].tolist()
+        # y_pred = df['pred'].tolist()
 
-        y_true = df['label'].tolist()
-        y_pred = df['pred'].tolist()
+        label_col = 'label' if 'label' in df.columns else 'ground_truth'
+        pred_col = 'pred' if 'pred' in df.columns else 'prediction'
+        y_true = df[label_col].tolist()
+        y_pred = df[pred_col].tolist()
+
 
         f1 = f1_score(y_true, y_pred)
         precision = precision_score(y_true, y_pred)

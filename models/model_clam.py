@@ -294,3 +294,40 @@ class CLAM_MB(CLAM_SB):
         if return_features:
             results_dict.update({'features': M})
         return logits, Y_prob, Y_hat, A_raw, results_dict
+
+class ABMIL(nn.Module):
+    def __init__(self, size_arg="small", dropout=0., embed_dim=1024, n_classes=2, gate=True):
+        super().__init__()
+        self.size_dict = {"small": [embed_dim, 512, 256], "big": [embed_dim, 512, 384]}
+        size = self.size_dict[size_arg]
+        
+        # Feature embed
+        self.fc = nn.Sequential(
+            nn.Linear(size[0], size[1]),
+            nn.ReLU(),
+            nn.Dropout(dropout)
+        )
+
+        # Attention layer
+        if gate:
+            self.attention_net = Attn_Net_Gated(L=size[1], D=size[2], dropout=dropout, n_classes=1)
+        else:
+            self.attention_net = Attn_Net(L=size[1], D=size[2], dropout=dropout, n_classes=1)
+
+        # Classifier
+        self.classifier = nn.Linear(size[1], n_classes)
+
+    def forward(self, h, return_features=False):
+        h = self.fc(h)
+        A, _ = self.attention_net(h)
+        A = torch.transpose(A, 1, 0)
+        A = F.softmax(A, dim=1)
+        M = torch.mm(A, h)  # pooled feature
+        logits = self.classifier(M)
+        Y_hat = torch.topk(logits, 1, dim=1)[1]
+        Y_prob = F.softmax(logits, dim=1)
+
+        results_dict = {}
+        if return_features:
+            results_dict.update({'features': M})
+        return logits, Y_prob, Y_hat, A, results_dict

@@ -18,7 +18,7 @@ def parse_args():
                         help='Directories containing .h5 files for each encoder (order must match models)')
     parser.add_argument('--dataset_csv', type=str,
                         required=True, help='Path to dataset_split.csv')
-    parser.add_argument('--output_csv', type=str, default='ensemble_results.csv',
+    parser.add_argument('--output_dir', type=str, default='ensemble_results.csv',
                         help='Path to save CSV with predictions')
     parser.add_argument('--embed_dim', type=int, default=1536,
                         help='Feature embedding dimension')
