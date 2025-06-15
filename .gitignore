@@ -8,3 +8,7 @@ splits/
 Data/
 data_heatmaps_backup/
 checkpoints/
+ensem_results/
+eval_results/
+result_csv/
+results/
