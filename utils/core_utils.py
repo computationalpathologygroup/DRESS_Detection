@@ -4,7 +4,7 @@ from utils.utils import *
 import os
 from dataset_modules.dataset_generic import save_splits
 from models.model_mil import MIL_fc, MIL_fc_mc
-from models.model_clam import CLAM_MB, CLAM_SB
+from models.model_clam import CLAM_MB, CLAM_SB, ABMIL
 from sklearn.preprocessing import label_binarize
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.metrics import auc as calc_auc
@@ -152,6 +152,9 @@ def train(datasets, cur, args):
             model = CLAM_MB(**model_dict, instance_loss_fn=instance_loss_fn)
         else:
             raise NotImplementedError
+        
+    elif args.model_type == 'abmil':
+        model = ABMIL(**model_dict)
     
     else: # args.model_type == 'mil'
         if args.n_classes > 2:
@@ -235,7 +238,7 @@ def train_loop_clam(epoch, model, loader, optimizer, n_classes, bag_weight, writ
     print('\n')
     for batch_idx, (data, label) in enumerate(loader):
         data, label = data.to(device), label.to(device)
-        logits, Y_prob, Y_hat, _, instance_dict = model(data, label=label, instance_eval=True)
+        logits, Y_prob, Y_hat, _, instance_dict = model(data, label=label, instance_eval=True, return_topk_features=True, use_random_topk = True)
 
         acc_logger.log(Y_hat, label)
         loss = loss_fn(logits, label)

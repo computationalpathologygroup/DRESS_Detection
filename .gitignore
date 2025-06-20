@@ -1,3 +1,14 @@
 **/.DS_Store
 __pycache__/
 notebooks
+# heatmaps/demo/slides
+# heatmaps/heatmap_raw_results/
+heatmaps/
+splits/
+Data/
+data_heatmaps_backup/
+checkpoints/
+ensem_results/
+eval_results/
+result_csv/
+results/
