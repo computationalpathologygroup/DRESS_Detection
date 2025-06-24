@@ -66,3 +66,5 @@ We compare three MIL-based pipelines:
 > Aggregates both magnifications using average or sum fusion.
 
 ---
+
+## Uploading the code.........80% > > >
